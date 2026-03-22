@@ -1,0 +1,43 @@
+﻿# Build output
+bin/
+obj/
+# User-specific files
+*.user
+*.userosscache
+*.sln.docstates
+*.suo
+*.rsuser
+# Visual Studio / Rider
+.vs/
+.idea/
+*.swp
+*.swo
+# VS Code
+.vscode/
+# NuGet
+*.nupkg
+*.snupkg
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+# .NET Core
+*.userprefs
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+# Publish output
+publish/
+**/publish/
+# OS files
+.DS_Store
+Thumbs.db
