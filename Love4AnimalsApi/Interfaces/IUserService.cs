@@ -2,5 +2,9 @@
 namespace Love4AnimalsApi.Interfaces;
 public interface IUserService
 {
-    public GetUserDto GetUser();
+    public List<GetUserDto> GetUsers();
+    public GetUserDto GetUser(long id);
+    public GetUserDto CreateUser(CreateUserDto createUserDto);
+    public GetUserDto UpdateUser(long id, UpdateUserDto updateUserDto);
+    public void DeleteUser(long id);
 }

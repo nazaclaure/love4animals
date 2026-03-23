@@ -6,6 +6,8 @@ builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICampaignService, CampaignService>();
+builder.Services.AddSingleton<ICampaignRepository, CampaignRepository>();
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
