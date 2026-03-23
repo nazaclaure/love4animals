@@ -1,6 +1,0 @@
-@love4animalsAPI_HostAddress = http://localhost:5057
-
-GET {{love4animalsAPI_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
