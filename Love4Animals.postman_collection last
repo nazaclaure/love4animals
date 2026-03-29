@@ -97,8 +97,21 @@
     {
       "name": "Delete User",
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5244/v1/users/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5244",
+          "path": [
+            "v1",
+            "users",
+            "2"
+          ]
+        }
       },
       "response": []
     },
@@ -183,8 +196,21 @@
     {
       "name": "Delete Campaign",
       "request": {
-        "method": "GET",
-        "header": []
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5244/v1/campaigns/2",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "5244",
+          "path": [
+            "v1",
+            "campaigns",
+            "2"
+          ]
+        }
       },
       "response": []
     }
