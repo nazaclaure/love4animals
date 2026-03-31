@@ -1,4 +1,4 @@
-﻿using Love4AnimalsApi.Interfaces;
+using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Repositories;
 public class CampaignRepository : ICampaignRepository
@@ -20,7 +20,7 @@ public class CampaignRepository : ICampaignRepository
     }
     public Campaign CreateCampaign(Campaign campaign)
     {
-        campaign.Id = this.Campaigns.Max(c => c.Id) + 1;
+        campaign.Id = this.Campaigns.Any() ? this.Campaigns.Max(c => c.Id) + 1 : 1;
         this.Campaigns.Add(campaign);
         return campaign;
     }

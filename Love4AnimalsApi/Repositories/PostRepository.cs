@@ -20,7 +20,7 @@ public class PostRepository : IPostRepository
     }
     public Post CreatePost(Post post)
     {
-        post.Id = this.Posts.Max(p => p.Id) + 1;
+        post.Id = this.Posts.Any() ? this.Posts.Max(p => p.Id) + 1 : 1;
         this.Posts.Add(post);
         return post;
     }
