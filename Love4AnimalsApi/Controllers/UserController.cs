@@ -1,44 +1,3 @@
-﻿/*using Love4AnimalsApi.Dtos;
-using Love4AnimalsApi.Interfaces;
-using Microsoft.AspNetCore.Mvc;
-namespace Love4AnimalsApi.Controllers
-{
-    [Route("v1/users")]
-    [ApiController]
-    public class UserController : ControllerBase
-    {
-        private IUserService userService;
-        public UserController(IUserService userService)
-        {
-            this.userService = userService;
-        }
-        [HttpGet("")]
-        public List<GetUserDto> GetUsers()
-        {
-            return this.userService.GetUsers();
-        }
-        [HttpGet("{id}")]
-        public GetUserDto GetUser(long id)
-        {
-            return this.userService.GetUser(id);
-        }
-        [HttpPost("")]
-        public GetUserDto CreateUser([FromBody] CreateUserDto createUserDto)
-        {
-            return this.userService.CreateUser(createUserDto);
-        }
-        [HttpPut("{id}")]
-        public GetUserDto UpdateUser(long id, [FromBody] UpdateUserDto updateUserDto)
-        {
-            return this.userService.UpdateUser(id, updateUserDto);
-        }
-        [HttpDelete("{id}")]
-        public void DeleteUser(long id)
-        {
-            this.userService.DeleteUser(id);
-        }
-    }
-}*/
 using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -54,14 +13,16 @@ namespace Love4AnimalsApi.Controllers
             this.userService = userService;
         }
         [HttpGet("")]
-        public List<GetUserDto> GetUsers()
+        public ActionResult<List<GetUserDto>> GetUsers()
         {
-            return this.userService.GetUsers();
+            return Ok(this.userService.GetUsers());
         }
         [HttpGet("{id}")]
-        public GetUserDto GetUser(long id)
+        public ActionResult<GetUserDto> GetUser(long id)
         {
-            return this.userService.GetUser(id);
+            var user = this.userService.GetUser(id);
+            if (user == null) return NotFound();
+            return Ok(user);
         }
         [HttpPost("")]
         public ActionResult<GetUserDto> CreateUser([FromBody] CreateUserDto createUserDto)
@@ -70,14 +31,17 @@ namespace Love4AnimalsApi.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
         [HttpPut("{id}")]
-        public GetUserDto UpdateUser(long id, [FromBody] UpdateUserDto updateUserDto)
+        public ActionResult<GetUserDto> UpdateUser(long id, [FromBody] UpdateUserDto updateUserDto)
         {
-            return this.userService.UpdateUser(id, updateUserDto);
+            var user = this.userService.UpdateUser(id, updateUserDto);
+            if (user == null) return NotFound();
+            return Ok(user);
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteUser(long id)
         {
-            this.userService.DeleteUser(id);
+            var result = this.userService.DeleteUser(id);
+            if (!result) return NotFound();
             return NoContent();
         }
     }

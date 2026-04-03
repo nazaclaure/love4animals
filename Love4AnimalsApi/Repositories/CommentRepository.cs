@@ -14,9 +14,9 @@ public class CommentRepository : ICommentRepository
     {
         return this.Comments.Where(c => c.PostId == postId).ToList();
     }
-    public Comment GetComment(long postId, long id)
+    public Comment? GetComment(long postId, long id)
     {
-        return this.Comments.First(c => c.PostId == postId && c.Id == id);
+        return this.Comments.FirstOrDefault(c => c.PostId == postId && c.Id == id);
     }
     public Comment CreateComment(Comment comment)
     {
@@ -24,15 +24,18 @@ public class CommentRepository : ICommentRepository
         this.Comments.Add(comment);
         return comment;
     }
-    public Comment UpdateComment(long id, Comment comment)
+    public Comment? UpdateComment(long id, Comment comment)
     {
-        Comment existingComment = this.Comments.First(c => c.Id == id);
+        Comment? existingComment = this.Comments.FirstOrDefault(c => c.Id == id);
+        if (existingComment == null) return null;
         existingComment.Content = comment.Content;
         return existingComment;
     }
-    public void DeleteComment(long id)
+    public bool DeleteComment(long id)
     {
-        Comment existingComment = this.Comments.First(c => c.Id == id);
+        Comment? existingComment = this.Comments.FirstOrDefault(c => c.Id == id);
+        if (existingComment == null) return false;
         this.Comments.Remove(existingComment);
+        return true;
     }
 }

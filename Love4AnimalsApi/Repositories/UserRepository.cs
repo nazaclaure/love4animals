@@ -14,9 +14,9 @@ public class UserRepository : IUserRepository
     {
         return this.Users;
     }
-    public User GetUser(long id)
+    public User? GetUser(long id)
     {
-        return this.Users.First(u => u.Id == id);
+        return this.Users.FirstOrDefault(u => u.Id == id);
     }
     public User CreateUser(User user)
     {
@@ -24,18 +24,21 @@ public class UserRepository : IUserRepository
         this.Users.Add(user);
         return user;
     }
-    public User UpdateUser(long id, User user)
+    public User? UpdateUser(long id, User user)
     {
-        User existingUser = this.Users.First(u => u.Id == id);
+        User? existingUser = this.Users.FirstOrDefault(u => u.Id == id);
+        if (existingUser == null) return null;
         existingUser.Name = user.Name;
         existingUser.Email = user.Email;
         existingUser.Password = user.Password;
         existingUser.ProfilePicture = user.ProfilePicture;
         return existingUser;
     }
-    public void DeleteUser(long id)
+    public bool DeleteUser(long id)
     {
-        User existingUser = this.Users.First(u => u.Id == id);
+        User? existingUser = this.Users.FirstOrDefault(u => u.Id == id);
+        if (existingUser == null) return false;
         this.Users.Remove(existingUser);
+        return true;
     }
 }

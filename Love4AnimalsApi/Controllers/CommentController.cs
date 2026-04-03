@@ -13,14 +13,16 @@ namespace Love4AnimalsApi.Controllers
             this.commentService = commentService;
         }
         [HttpGet("")]
-        public List<GetCommentDto> GetComments(long postId)
+        public ActionResult<List<GetCommentDto>> GetComments(long postId)
         {
-            return this.commentService.GetComments(postId);
+            return Ok(this.commentService.GetComments(postId));
         }
         [HttpGet("{id}")]
-        public GetCommentDto GetComment(long postId, long id)
+        public ActionResult<GetCommentDto> GetComment(long postId, long id)
         {
-            return this.commentService.GetComment(postId, id);
+            var comment = this.commentService.GetComment(postId, id);
+            if (comment == null) return NotFound();
+            return Ok(comment);
         }
         [HttpPost("")]
         public ActionResult<GetCommentDto> CreateComment(long postId, [FromBody] CreateCommentDto createCommentDto)
@@ -29,14 +31,17 @@ namespace Love4AnimalsApi.Controllers
             return CreatedAtAction(nameof(GetComment), new { postId = postId, id = comment.Id }, comment);
         }
         [HttpPut("{id}")]
-        public GetCommentDto UpdateComment(long postId, long id, [FromBody] UpdateCommentDto updateCommentDto)
+        public ActionResult<GetCommentDto> UpdateComment(long postId, long id, [FromBody] UpdateCommentDto updateCommentDto)
         {
-            return this.commentService.UpdateComment(id, updateCommentDto);
+            var comment = this.commentService.UpdateComment(id, updateCommentDto);
+            if (comment == null) return NotFound();
+            return Ok(comment);
         }
         [HttpDelete("{id}")]
         public IActionResult DeleteComment(long postId, long id)
         {
-            this.commentService.DeleteComment(id);
+            var result = this.commentService.DeleteComment(id);
+            if (!result) return NotFound();
             return NoContent();
         }
     }

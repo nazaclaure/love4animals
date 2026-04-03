@@ -1,4 +1,4 @@
-﻿using Love4AnimalsApi.Dtos;
+using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Services;
@@ -14,9 +14,10 @@ public class CampaignService : ICampaignService
         List<Campaign> campaigns = campaignRepository.GetCampaigns();
         return campaigns.Select(c => new GetCampaignDto(c.Id, c.Name, c.Description, c.FundraisingGoal, c.TotalRaised, c.StartDate, c.EndDate)).ToList();
     }
-    public GetCampaignDto GetCampaign(long id)
+    public GetCampaignDto? GetCampaign(long id)
     {
-        Campaign campaign = campaignRepository.GetCampaign(id);
+        Campaign? campaign = campaignRepository.GetCampaign(id);
+        if (campaign == null) return null;
         return new GetCampaignDto(campaign.Id, campaign.Name, campaign.Description, campaign.FundraisingGoal, campaign.TotalRaised, campaign.StartDate, campaign.EndDate);
     }
     public GetCampaignDto CreateCampaign(CreateCampaignDto createCampaignDto)
@@ -25,14 +26,15 @@ public class CampaignService : ICampaignService
         Campaign createdCampaign = campaignRepository.CreateCampaign(campaign);
         return new GetCampaignDto(createdCampaign.Id, createdCampaign.Name, createdCampaign.Description, createdCampaign.FundraisingGoal, createdCampaign.TotalRaised, createdCampaign.StartDate, createdCampaign.EndDate);
     }
-    public GetCampaignDto UpdateCampaign(long id, UpdateCampaignDto updateCampaignDto)
+    public GetCampaignDto? UpdateCampaign(long id, UpdateCampaignDto updateCampaignDto)
     {
         Campaign campaign = new(id, updateCampaignDto.Name, updateCampaignDto.Description, updateCampaignDto.FundraisingGoal, 0.0, updateCampaignDto.StartDate, updateCampaignDto.EndDate);
-        Campaign updatedCampaign = campaignRepository.UpdateCampaign(id, campaign);
+        Campaign? updatedCampaign = campaignRepository.UpdateCampaign(id, campaign);
+        if (updatedCampaign == null) return null;
         return new GetCampaignDto(updatedCampaign.Id, updatedCampaign.Name, updatedCampaign.Description, updatedCampaign.FundraisingGoal, updatedCampaign.TotalRaised, updatedCampaign.StartDate, updatedCampaign.EndDate);
     }
-    public void DeleteCampaign(long id)
+    public bool DeleteCampaign(long id)
     {
-        campaignRepository.DeleteCampaign(id);
+        return campaignRepository.DeleteCampaign(id);
     }
 }

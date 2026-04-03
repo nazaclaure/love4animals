@@ -1,10 +1,10 @@
-﻿using Love4AnimalsApi.Models;
+using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Interfaces;
 public interface IUserRepository
 {
-    public List<User> GetUsers();
-    public User GetUser(long id);
-    public User CreateUser(User user);
-    public User UpdateUser(long id, User user);
-    public void DeleteUser(long id);
+    List<User> GetUsers();
+    User? GetUser(long id);
+    User CreateUser(User user);
+    User? UpdateUser(long id, User user);
+    bool DeleteUser(long id);
 }

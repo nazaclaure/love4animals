@@ -3,8 +3,8 @@ namespace Love4AnimalsApi.Interfaces;
 public interface IPostRepository
 {
     List<Post> GetPosts();
-    Post GetPost(long id);
+    Post? GetPost(long id);
     Post CreatePost(Post post);
-    Post UpdatePost(long id, Post post);
-    void DeletePost(long id);
+    Post? UpdatePost(long id, Post post);
+    bool DeletePost(long id);
 }

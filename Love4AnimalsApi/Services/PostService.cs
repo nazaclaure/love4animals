@@ -14,9 +14,10 @@ public class PostService : IPostService
         List<Post> posts = postRepository.GetPosts();
         return posts.Select(p => new GetPostDto(p.Id, p.Description, p.ImageURL, p.CreatedAt, p.UserId, p.CampaignId)).ToList();
     }
-    public GetPostDto GetPost(long id)
+    public GetPostDto? GetPost(long id)
     {
-        Post post = postRepository.GetPost(id);
+        Post? post = postRepository.GetPost(id);
+        if (post == null) return null;
         return new GetPostDto(post.Id, post.Description, post.ImageURL, post.CreatedAt, post.UserId, post.CampaignId);
     }
     public GetPostDto CreatePost(CreatePostDto createPostDto)
@@ -25,17 +26,19 @@ public class PostService : IPostService
         Post createdPost = postRepository.CreatePost(post);
         return new GetPostDto(createdPost.Id, createdPost.Description, createdPost.ImageURL, createdPost.CreatedAt, createdPost.UserId, createdPost.CampaignId);
     }
-    public GetPostDto UpdatePost(long id, UpdatePostDto updatePostDto)
+    public GetPostDto? UpdatePost(long id, UpdatePostDto updatePostDto)
     {
-        Post post = postRepository.GetPost(id);
+        Post? post = postRepository.GetPost(id);
+        if (post == null) return null;
         post.Description = updatePostDto.Description;
         post.ImageURL = updatePostDto.ImageURL;
         post.CampaignId = updatePostDto.CampaignId;
-        Post updatedPost = postRepository.UpdatePost(id, post);
+        Post? updatedPost = postRepository.UpdatePost(id, post);
+        if (updatedPost == null) return null;
         return new GetPostDto(updatedPost.Id, updatedPost.Description, updatedPost.ImageURL, updatedPost.CreatedAt, updatedPost.UserId, updatedPost.CampaignId);
     }
-    public void DeletePost(long id)
+    public bool DeletePost(long id)
     {
-        postRepository.DeletePost(id);
+        return postRepository.DeletePost(id);
     }
 }

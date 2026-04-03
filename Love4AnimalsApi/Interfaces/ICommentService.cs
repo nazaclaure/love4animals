@@ -3,8 +3,8 @@ namespace Love4AnimalsApi.Interfaces;
 public interface ICommentService
 {
     List<GetCommentDto> GetComments(long postId);
-    GetCommentDto GetComment(long postId, long id);
+    GetCommentDto? GetComment(long postId, long id);
     GetCommentDto CreateComment(long postId, CreateCommentDto createCommentDto);
-    GetCommentDto UpdateComment(long id, UpdateCommentDto updateCommentDto);
-    void DeleteComment(long id);
+    GetCommentDto? UpdateComment(long id, UpdateCommentDto updateCommentDto);
+    bool DeleteComment(long id);
 }
