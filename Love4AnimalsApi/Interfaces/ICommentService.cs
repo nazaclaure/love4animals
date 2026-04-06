@@ -1,10 +1,10 @@
-using Love4AnimalsApi.Dtos;
+﻿using Love4AnimalsApi.Dtos;
 namespace Love4AnimalsApi.Interfaces;
 public interface ICommentService
 {
-    List<GetCommentDto> GetComments(long postId);
-    GetCommentDto? GetComment(long postId, long id);
-    GetCommentDto CreateComment(long postId, CreateCommentDto createCommentDto);
-    GetCommentDto? UpdateComment(long id, UpdateCommentDto updateCommentDto);
-    bool DeleteComment(long id);
+    public List<GetCommentDto>? GetComments(long postId);
+    public GetCommentDto? GetComment(long postId, long id);
+    public GetCommentDto? CreateComment(long postId, CreateCommentDto createCommentDto);
+    public GetCommentDto? UpdateComment(long postId, long id, UpdateCommentDto updateCommentDto);
+    public bool DeleteComment(long postId, long id);
 }

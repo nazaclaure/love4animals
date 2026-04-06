@@ -1,4 +1,4 @@
-using Love4AnimalsApi.Interfaces;
+﻿using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Repositories;
 public class PostRepository : IPostRepository
@@ -14,9 +14,9 @@ public class PostRepository : IPostRepository
     {
         return this.Posts;
     }
-    public Post GetPost(long id)
+    public Post? GetPost(long id)
     {
-        return this.Posts.First(p => p.Id == id);
+        return this.Posts.FirstOrDefault(p => p.Id == id);
     }
     public Post CreatePost(Post post)
     {
@@ -24,9 +24,10 @@ public class PostRepository : IPostRepository
         this.Posts.Add(post);
         return post;
     }
-    public Post UpdatePost(long id, Post post)
+    public Post? UpdatePost(long id, Post post)
     {
-        Post existingPost = this.Posts.First(p => p.Id == id);
+        Post? existingPost = this.Posts.FirstOrDefault(p => p.Id == id);
+        if (existingPost == null) return null;
         existingPost.Description = post.Description;
         existingPost.ImageURL = post.ImageURL;
         existingPost.CampaignId = post.CampaignId;
@@ -34,14 +35,9 @@ public class PostRepository : IPostRepository
     }
     public bool DeletePost(long id)
     {
-        Post existingPost = this.Posts.First(p => p.Id == id);
+        Post? existingPost = this.Posts.FirstOrDefault(p => p.Id == id);
+        if (existingPost == null) return false;
         this.Posts.Remove(existingPost);
         return true;
     }
 }
-    /*public void DeletePost(long id)
-    {
-        Post existingPost = this.Posts.First(p => p.Id == id);
-        this.Posts.Remove(existingPost);
-    }
-}*/
