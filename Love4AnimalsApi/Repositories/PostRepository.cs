@@ -14,20 +14,19 @@ public class PostRepository : IPostRepository
     {
         return this.Posts;
     }
-    public Post? GetPost(long id)
+    public Post GetPost(long id)
     {
-        return this.Posts.FirstOrDefault(p => p.Id == id);
+        return this.Posts.First(p => p.Id == id);
     }
     public Post CreatePost(Post post)
     {
-        post.Id = this.Posts.Any() ? this.Posts.Max(p => p.Id) + 1 : 1;
+        post.Id = this.Posts.Max(p => p.Id) + 1;
         this.Posts.Add(post);
         return post;
     }
-    public Post? UpdatePost(long id, Post post)
+    public Post UpdatePost(long id, Post post)
     {
-        Post? existingPost = this.Posts.FirstOrDefault(p => p.Id == id);
-        if (existingPost == null) return null;
+        Post existingPost = this.Posts.First(p => p.Id == id);
         existingPost.Description = post.Description;
         existingPost.ImageURL = post.ImageURL;
         existingPost.CampaignId = post.CampaignId;
@@ -35,9 +34,14 @@ public class PostRepository : IPostRepository
     }
     public bool DeletePost(long id)
     {
-        Post? existingPost = this.Posts.FirstOrDefault(p => p.Id == id);
-        if (existingPost == null) return false;
+        Post existingPost = this.Posts.First(p => p.Id == id);
         this.Posts.Remove(existingPost);
         return true;
     }
 }
+    /*public void DeletePost(long id)
+    {
+        Post existingPost = this.Posts.First(p => p.Id == id);
+        this.Posts.Remove(existingPost);
+    }
+}*/

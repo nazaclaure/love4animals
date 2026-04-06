@@ -1,10 +1,20 @@
+﻿/*using Love4AnimalsApi.Dtos;
+namespace Love4AnimalsApi.Interfaces;
+public interface IUserService
+{
+    public GetUserDto GetUser();
+}
+*/
 using Love4AnimalsApi.Dtos;
 namespace Love4AnimalsApi.Interfaces;
 public interface IUserService
 {
-    List<GetUserDto> GetUsers();
-    GetUserDto? GetUser(long id);
-    GetUserDto CreateUser(CreateUserDto createUserDto);
-    GetUserDto? UpdateUser(long id, UpdateUserDto updateUserDto);
-    bool DeleteUser(long id);
+    public List<GetUserDto> GetUsers();
+    //public GetUserDto GetUser(long id);
+    public GetUserDto CreateUser(CreateUserDto createUserDto);
+    //public GetUserDto UpdateUser(long id, UpdateUserDto updateUserDto);
+    //public void DeleteUser(long id);
+    public GetUserDto? GetUser(long id);
+public GetUserDto? UpdateUser(long id, UpdateUserDto updateUserDto);
+    public bool DeleteUser(long id);
 }
