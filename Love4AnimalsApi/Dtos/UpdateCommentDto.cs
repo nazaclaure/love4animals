@@ -1,5 +1,7 @@
+﻿using System.ComponentModel.DataAnnotations;
 namespace Love4AnimalsApi.Dtos;
 public class UpdateCommentDto
 {
-    public string Content { get; set; }
+    [Required]
+    public string Content { get; set; } = "";
 }
