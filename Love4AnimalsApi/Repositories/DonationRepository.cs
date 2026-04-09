@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
@@ -17,8 +16,8 @@ namespace Love4AnimalsApi.Repositories
         public List<Donation> GetDonationsByCampaign(long campaignId) =>
             _donations.Where(d => d.CampaignId == campaignId).ToList();
 
-        public Donation? GetDonation(long campaignId, long userId) =>
-            _donations.FirstOrDefault(d => d.CampaignId == campaignId && d.UserId == userId);
+        public Donation? GetDonation(long id) =>
+            _donations.FirstOrDefault(d => d.Id == id);
 
         public Donation CreateDonation(Donation donation)
         {
@@ -27,9 +26,9 @@ namespace Love4AnimalsApi.Repositories
             return donation;
         }
 
-        public Donation? UpdateDonation(long campaignId, long userId, Donation updatedData)
+        public Donation? UpdateDonation(long id, Donation updatedData)
         {
-            var existing = GetDonation(campaignId, userId);
+            var existing = GetDonation(id);
             if (existing != null) {
                 existing.Amount = updatedData.Amount;
                 existing.Message = updatedData.Message;
@@ -38,9 +37,9 @@ namespace Love4AnimalsApi.Repositories
             return existing;
         }
 
-        public bool DeleteDonation(long campaignId, long userId)
+        public bool DeleteDonation(long id)
         {
-            var existing = GetDonation(campaignId, userId);
+            var existing = GetDonation(id);
             if (existing == null) return false;
             _donations.Remove(existing);
             return true;

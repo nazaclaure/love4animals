@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Love4AnimalsApi.Dtos;
@@ -20,20 +20,19 @@ namespace Love4AnimalsApi.Services
             _campaignService = campaignService;
         }
 
-        public List<GetDonationDto> GetDonationsByCampaign(long campaignId) => 
+        public List<GetDonationDto> GetDonationsByCampaign(long campaignId) =>
             _repo.GetDonationsByCampaign(campaignId).Select(Map).ToList();
 
-        public GetDonationDto? GetDonation(long campaignId, long userId) 
-        { 
-            var d = _repo.GetDonation(campaignId, userId); 
-            return d == null ? null : Map(d); 
+        public GetDonationDto? GetDonation(long id)
+        {
+            var d = _repo.GetDonation(id);
+            return d == null ? null : Map(d);
         }
 
         public GetDonationDto CreateDonation(CreateDonationDto dto)
         {
-            if (_userService.GetUser(dto.UserId) == null) throw new ArgumentException("Usuario no existe");
-            if (_campaignService.GetCampaign(dto.CampaignId) == null) throw new ArgumentException("Campaña no existe");
-
+            if (_userService.GetUser(dto.UserId) == null) throw new ArgumentException("User does not exist");
+            if (_campaignService.GetCampaign(dto.CampaignId) == null) throw new ArgumentException("Campaign does not exist");
             var d = _repo.CreateDonation(new Donation {
                 Amount = dto.Amount, Date = DateTime.UtcNow, Status = "Completed",
                 UserId = dto.UserId, CampaignId = dto.CampaignId, Message = dto.Message
@@ -41,27 +40,24 @@ namespace Love4AnimalsApi.Services
             return Map(d);
         }
 
-       public GetDonationDto? UpdateDonation(long campaignId, long userId, UpdateDonationDto dto)
-{
-    var updateData = new Donation 
-    { 
-        Amount = dto.Amount, 
-        Message = dto.Message,
-        Status = dto.Status // 👈 Pasa el estado del DTO al Modelo
-    };
-    
-    var updatedDonation = _repo.UpdateDonation(campaignId, userId, updateData);
-    
-    if (updatedDonation == null) return null;
-    return Map(updatedDonation);
-}
+        public GetDonationDto? UpdateDonation(long id, UpdateDonationDto dto)
+        {
+            var updateData = new Donation {
+                Amount = dto.Amount,
+                Message = dto.Message,
+                Status = dto.Status
+            };
+            var updated = _repo.UpdateDonation(id, updateData);
+            if (updated == null) return null;
+            return Map(updated);
+        }
 
-        public bool DeleteDonation(long campaignId, long userId) => 
-            _repo.DeleteDonation(campaignId, userId);
-        
+        public bool DeleteDonation(long id) =>
+            _repo.DeleteDonation(id);
+
         private GetDonationDto Map(Donation d) => new GetDonationDto {
-            Id = d.Id, Amount = d.Amount, Date = d.Date, Status = d.Status, 
-            UserId = d.UserId, CampaignId = d.CampaignId, Message = d.Message 
+            Id = d.Id, Amount = d.Amount, Date = d.Date, Status = d.Status,
+            UserId = d.UserId, CampaignId = d.CampaignId, Message = d.Message
         };
     }
 }

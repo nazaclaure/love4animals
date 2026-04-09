@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Love4AnimalsApi.Models;
 
 namespace Love4AnimalsApi.Interfaces
@@ -6,11 +6,9 @@ namespace Love4AnimalsApi.Interfaces
     public interface IDonationRepository
     {
         List<Donation> GetDonationsByCampaign(long campaignId);
+        Donation? GetDonation(long id);
         Donation CreateDonation(Donation donation);
-        
-        // Solo pide campaña y usuario
-        Donation? GetDonation(long campaignId, long userId);
-        Donation? UpdateDonation(long campaignId, long userId, Donation donation);
-        bool DeleteDonation(long campaignId, long userId);
+        Donation? UpdateDonation(long id, Donation donation);
+        bool DeleteDonation(long id);
     }
 }

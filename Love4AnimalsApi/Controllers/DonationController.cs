@@ -34,7 +34,7 @@ namespace Love4AnimalsApi.Controllers
         /// <summary>Create a new donation.</summary>
         /// <param name="dto">Donation data</param>
         [HttpPost]
-        [EndpointSummary("Create Donation")]
+        [EndpointSummary("Create a new donation.")]
         [Consumes("application/json")]
         [ProducesResponseType<GetDonationDto>(201)]
         [ProducesResponseType(400)]
@@ -44,7 +44,7 @@ namespace Love4AnimalsApi.Controllers
             try
             {
                 var created = _donationService.CreateDonation(dto);
-                return CreatedAtAction(nameof(GetDonationByCampaignAndUser), new { campaignId = created.CampaignId, userId = created.UserId }, created);
+                return CreatedAtAction(nameof(GetDonation), new { id = created.Id }, created);
             }
             catch (System.ArgumentException)
             {
@@ -52,47 +52,44 @@ namespace Love4AnimalsApi.Controllers
             }
         }
 
-        /// <summary>Get a donation by campaign and user.</summary>
-        /// <param name="campaignId">Campaign ID</param>
-        /// <param name="userId">User ID</param>
-        [HttpGet("campaign/{campaignId}/user/{userId}/donation")]
-        [EndpointSummary("Get Donation By Campaign And User")]
+        /// <summary>Get a donation by ID.</summary>
+        /// <param name="id">Donation ID</param>
+        [HttpGet("{id}")]
+        [EndpointSummary("Get a donation by ID.")]
         [ProducesResponseType<GetDonationDto>(200)]
         [ProducesResponseType(404)]
-        public IActionResult GetDonationByCampaignAndUser(long campaignId, long userId)
+        public IActionResult GetDonation(long id)
         {
-            var donation = _donationService.GetDonation(campaignId, userId);
+            var donation = _donationService.GetDonation(id);
             if (donation == null) return NotFound();
             return Ok(donation);
         }
 
         /// <summary>Update an existing donation.</summary>
-        /// <param name="campaignId">Campaign ID</param>
-        /// <param name="userId">User ID</param>
+        /// <param name="id">Donation ID</param>
         /// <param name="dto">Updated donation data</param>
-        [HttpPut("campaign/{campaignId}/user/{userId}/donation")]
-        [EndpointSummary("Update Donation")]
+        [HttpPut("{id}")]
+        [EndpointSummary("Update an existing donation.")]
         [Consumes("application/json")]
         [ProducesResponseType<GetDonationDto>(200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
-        public IActionResult UpdateDonation(long campaignId, long userId, [FromBody] UpdateDonationDto dto)
+        public IActionResult UpdateDonation(long id, [FromBody] UpdateDonationDto dto)
         {
-            var updated = _donationService.UpdateDonation(campaignId, userId, dto);
+            var updated = _donationService.UpdateDonation(id, dto);
             if (updated == null) return NotFound();
             return Ok(updated);
         }
 
-        /// <summary>Delete a donation by campaign and user.</summary>
-        /// <param name="campaignId">Campaign ID</param>
-        /// <param name="userId">User ID</param>
-        [HttpDelete("campaign/{campaignId}/user/{userId}/donation")]
-        [EndpointSummary("Delete Donation")]
+        /// <summary>Delete a donation by ID.</summary>
+        /// <param name="id">Donation ID</param>
+        [HttpDelete("{id}")]
+        [EndpointSummary("Delete a donation by ID.")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
-        public IActionResult DeleteDonation(long campaignId, long userId)
+        public IActionResult DeleteDonation(long id)
         {
-            var deleted = _donationService.DeleteDonation(campaignId, userId);
+            var deleted = _donationService.DeleteDonation(id);
             if (!deleted) return NotFound();
             return NoContent();
         }
