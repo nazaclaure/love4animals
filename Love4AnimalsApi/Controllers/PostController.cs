@@ -14,7 +14,7 @@ namespace Love4AnimalsApi.Controllers
             this.postService = postService;
         }
 
-        /// <summary>Retorna todos los posts registrados.</summary>
+        /// <summary>Get all posts.</summary>
         [HttpGet("")]
         [EndpointSummary("Get All Posts")]
         [ProducesResponseType<List<GetPostDto>>(200)]
@@ -23,7 +23,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(this.postService.GetPosts());
         }
 
-        /// <summary>Retorna un post por su ID.</summary>
+        /// <summary>Get a post by ID.</summary>
         [HttpGet("{id}")]
         [EndpointSummary("Get Post By Id")]
         [ProducesResponseType<GetPostDto>(200)]
@@ -35,19 +35,21 @@ namespace Love4AnimalsApi.Controllers
             return Ok(post);
         }
 
-        /// <summary>Crea un nuevo post.</summary>
+        /// <summary>Create a new post.</summary>
         [HttpPost("")]
         [EndpointSummary("Create Post")]
         [Consumes("application/json")]
         [ProducesResponseType<GetPostDto>(201)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         public ActionResult<GetPostDto> CreatePost([FromBody] CreatePostDto createPostDto)
         {
             var post = this.postService.CreatePost(createPostDto);
+            if (post == null) return NotFound();
             return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
         }
 
-        /// <summary>Actualiza un post existente.</summary>
+        /// <summary>Update an existing post.</summary>
         [HttpPut("{id}")]
         [EndpointSummary("Update Post")]
         [Consumes("application/json")]
@@ -61,7 +63,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(post);
         }
 
-        /// <summary>Elimina un post por su ID.</summary>
+        /// <summary>Delete a post by ID.</summary>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Post")]
         [ProducesResponseType(204)]

@@ -1,13 +1,19 @@
-using Love4AnimalsApi.Dtos;
+﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Services;
 public class PostService : IPostService
 {
     private IPostRepository postRepository;
-    public PostService(IPostRepository postRepository)
+    private IUserRepository userRepository;
+    private ICampaignRepository campaignRepository;
+    private ICommentRepository commentRepository;
+    public PostService(IPostRepository postRepository, IUserRepository userRepository, ICampaignRepository campaignRepository, ICommentRepository commentRepository)
     {
         this.postRepository = postRepository;
+        this.userRepository = userRepository;
+        this.campaignRepository = campaignRepository;
+        this.commentRepository = commentRepository;
     }
     public List<GetPostDto> GetPosts()
     {
@@ -20,8 +26,12 @@ public class PostService : IPostService
         if (post == null) return null;
         return new GetPostDto(post.Id, post.Description, post.ImageURL, post.CreatedAt, post.UserId, post.CampaignId);
     }
-    public GetPostDto CreatePost(CreatePostDto createPostDto)
+    public GetPostDto? CreatePost(CreatePostDto createPostDto)
     {
+        User? user = userRepository.GetUser(createPostDto.UserId);
+        if (user == null) return null;
+        Campaign? campaign = campaignRepository.GetCampaign(createPostDto.CampaignId);
+        if (campaign == null) return null;
         Post post = new(0, createPostDto.Description, createPostDto.ImageURL, DateTime.Now, createPostDto.UserId, createPostDto.CampaignId);
         Post createdPost = postRepository.CreatePost(post);
         return new GetPostDto(createdPost.Id, createdPost.Description, createdPost.ImageURL, createdPost.CreatedAt, createdPost.UserId, createdPost.CampaignId);
@@ -39,6 +49,9 @@ public class PostService : IPostService
     }
     public bool DeletePost(long id)
     {
+        Post? post = postRepository.GetPost(id);
+        if (post == null) return false;
+        commentRepository.DeleteCommentsByPostId(id);
         return postRepository.DeletePost(id);
     }
 }

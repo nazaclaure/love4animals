@@ -1,4 +1,4 @@
-using Love4AnimalsApi.Interfaces;
+﻿using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Repositories;
 public class CommentRepository : ICommentRepository
@@ -37,5 +37,9 @@ public class CommentRepository : ICommentRepository
         if (existingComment == null) return false;
         this.Comments.Remove(existingComment);
         return true;
+    }
+    public void DeleteCommentsByPostId(long postId)
+    {
+        this.Comments.RemoveAll(c => c.PostId == postId);
     }
 }

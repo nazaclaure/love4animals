@@ -1,4 +1,4 @@
-using Love4AnimalsApi.Models;
+﻿using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Interfaces;
 public interface ICommentRepository
 {
@@ -7,4 +7,5 @@ public interface ICommentRepository
     Comment CreateComment(Comment comment);
     Comment? UpdateComment(long id, Comment comment);
     bool DeleteComment(long id);
+    void DeleteCommentsByPostId(long postId);
 }

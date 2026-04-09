@@ -14,7 +14,7 @@ namespace Love4AnimalsApi.Controllers
             this.campaignService = campaignService;
         }
 
-        /// <summary>Retorna todas las campañas registradas.</summary>
+        /// <summary>Get all campaigns.</summary>
         [HttpGet("")]
         [EndpointSummary("Get All Campaigns")]
         [ProducesResponseType<List<GetCampaignDto>>(200)]
@@ -23,7 +23,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(this.campaignService.GetCampaigns());
         }
 
-        /// <summary>Retorna una campaña por su ID.</summary>
+        /// <summary>Get a campaign by ID.</summary>
         [HttpGet("{id}")]
         [EndpointSummary("Get Campaign By Id")]
         [ProducesResponseType<GetCampaignDto>(200)]
@@ -35,7 +35,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(campaign);
         }
 
-        /// <summary>Crea una nueva campaña.</summary>
+        /// <summary>Create a new campaign.</summary>
         [HttpPost("")]
         [EndpointSummary("Create Campaign")]
         [Consumes("application/json")]
@@ -47,7 +47,7 @@ namespace Love4AnimalsApi.Controllers
             return CreatedAtAction(nameof(GetCampaign), new { id = campaign.Id }, campaign);
         }
 
-        /// <summary>Actualiza una campaña existente.</summary>
+        /// <summary>Update an existing campaign.</summary>
         [HttpPut("{id}")]
         [EndpointSummary("Update Campaign")]
         [Consumes("application/json")]
@@ -61,7 +61,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(campaign);
         }
 
-        /// <summary>Elimina una campaña por su ID.</summary>
+        /// <summary>Delete a campaign by ID.</summary>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Campaign")]
         [ProducesResponseType(204)]

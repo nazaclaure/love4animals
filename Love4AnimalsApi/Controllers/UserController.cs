@@ -14,7 +14,7 @@ namespace Love4AnimalsApi.Controllers
             this.userService = userService;
         }
 
-        /// <summary>Retorna todos los usuarios registrados.</summary>
+        /// <summary>Get all users.</summary>
         [HttpGet("")]
         [EndpointSummary("Get All Users")]
         [ProducesResponseType<List<GetUserDto>>(200)]
@@ -23,7 +23,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(this.userService.GetUsers());
         }
 
-        /// <summary>Retorna un usuario por su ID.</summary>
+        /// <summary>Get a user by ID.</summary>
         [HttpGet("{id}")]
         [EndpointSummary("Get User By Id")]
         [ProducesResponseType<GetUserDto>(200)]
@@ -35,7 +35,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(user);
         }
 
-        /// <summary>Crea un nuevo usuario.</summary>
+        /// <summary>Create a new user.</summary>
         [HttpPost("")]
         [EndpointSummary("Create User")]
         [Consumes("application/json")]
@@ -47,7 +47,7 @@ namespace Love4AnimalsApi.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
-        /// <summary>Actualiza un usuario existente.</summary>
+        /// <summary>Update an existing user.</summary>
         [HttpPut("{id}")]
         [EndpointSummary("Update User")]
         [Consumes("application/json")]
@@ -61,7 +61,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(user);
         }
 
-        /// <summary>Elimina un usuario por su ID.</summary>
+        /// <summary>Delete a user by ID.</summary>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete User")]
         [ProducesResponseType(204)]

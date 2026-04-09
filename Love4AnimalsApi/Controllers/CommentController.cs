@@ -14,7 +14,7 @@ namespace Love4AnimalsApi.Controllers
             this.commentService = commentService;
         }
 
-        /// <summary>Retorna todos los comentarios de un post.</summary>
+        /// <summary>Get all comments for a post.</summary>
         [HttpGet("")]
         [EndpointSummary("Get All Comments")]
         [ProducesResponseType<List<GetCommentDto>>(200)]
@@ -26,7 +26,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(comments);
         }
 
-        /// <summary>Retorna un comentario por su ID.</summary>
+        /// <summary>Get a comment by ID.</summary>
         [HttpGet("{id}")]
         [EndpointSummary("Get Comment By Id")]
         [ProducesResponseType<GetCommentDto>(200)]
@@ -38,7 +38,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(comment);
         }
 
-        /// <summary>Crea un nuevo comentario en un post.</summary>
+        /// <summary>Create a new comment on a post.</summary>
         [HttpPost("")]
         [EndpointSummary("Create Comment")]
         [Consumes("application/json")]
@@ -52,7 +52,7 @@ namespace Love4AnimalsApi.Controllers
             return CreatedAtAction(nameof(GetComment), new { postId = postId, id = comment.Id }, comment);
         }
 
-        /// <summary>Actualiza un comentario existente.</summary>
+        /// <summary>Update an existing comment.</summary>
         [HttpPut("{id}")]
         [EndpointSummary("Update Comment")]
         [Consumes("application/json")]
@@ -66,7 +66,7 @@ namespace Love4AnimalsApi.Controllers
             return Ok(comment);
         }
 
-        /// <summary>Elimina un comentario por su ID.</summary>
+        /// <summary>Delete a comment by ID.</summary>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Comment")]
         [ProducesResponseType(204)]
