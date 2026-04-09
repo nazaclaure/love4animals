@@ -1,11 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Love4AnimalsApi.Controllers
 {
+    /// <summary>Manage posts.</summary>
     [Route("v1/posts")]
     [ApiController]
     [Tags("Post")]
+    [Produces("application/json")]
     public class PostController : ControllerBase
     {
         private IPostService postService;
@@ -24,6 +27,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Get a post by ID.</summary>
+        /// <param name="id">Post ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get Post By Id")]
         [ProducesResponseType<GetPostDto>(200)]
@@ -36,6 +40,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Create a new post.</summary>
+        /// <param name="createPostDto">Post data</param>
         [HttpPost("")]
         [EndpointSummary("Create Post")]
         [Consumes("application/json")]
@@ -50,6 +55,8 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Update an existing post.</summary>
+        /// <param name="id">Post ID</param>
+        /// <param name="updatePostDto">Updated post data</param>
         [HttpPut("{id}")]
         [EndpointSummary("Update Post")]
         [Consumes("application/json")]
@@ -64,6 +71,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Delete a post by ID.</summary>
+        /// <param name="id">Post ID</param>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Post")]
         [ProducesResponseType(204)]

@@ -1,11 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Love4AnimalsApi.Controllers
 {
+    /// <summary>Manage comments on posts.</summary>
     [Route("v1/posts/{postId}/comments")]
     [ApiController]
     [Tags("Comment")]
+    [Produces("application/json")]
     public class CommentController : ControllerBase
     {
         private ICommentService commentService;
@@ -15,6 +18,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Get all comments for a post.</summary>
+        /// <param name="postId">Post ID</param>
         [HttpGet("")]
         [EndpointSummary("Get All Comments")]
         [ProducesResponseType<List<GetCommentDto>>(200)]
@@ -27,6 +31,8 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Get a comment by ID.</summary>
+        /// <param name="postId">Post ID</param>
+        /// <param name="id">Comment ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get Comment By Id")]
         [ProducesResponseType<GetCommentDto>(200)]
@@ -39,6 +45,8 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Create a new comment on a post.</summary>
+        /// <param name="postId">Post ID</param>
+        /// <param name="createCommentDto">Comment data</param>
         [HttpPost("")]
         [EndpointSummary("Create Comment")]
         [Consumes("application/json")]
@@ -53,6 +61,9 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Update an existing comment.</summary>
+        /// <param name="postId">Post ID</param>
+        /// <param name="id">Comment ID</param>
+        /// <param name="updateCommentDto">Updated comment data</param>
         [HttpPut("{id}")]
         [EndpointSummary("Update Comment")]
         [Consumes("application/json")]
@@ -67,6 +78,8 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Delete a comment by ID.</summary>
+        /// <param name="postId">Post ID</param>
+        /// <param name="id">Comment ID</param>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Comment")]
         [ProducesResponseType(204)]

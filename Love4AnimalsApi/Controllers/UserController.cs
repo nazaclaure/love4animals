@@ -1,11 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Love4AnimalsApi.Controllers
 {
+    /// <summary>Manage users.</summary>
     [Route("v1/users")]
     [ApiController]
     [Tags("User")]
+    [Produces("application/json")]
     public class UserController : ControllerBase
     {
         private IUserService userService;
@@ -24,6 +27,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Get a user by ID.</summary>
+        /// <param name="id">User ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get User By Id")]
         [ProducesResponseType<GetUserDto>(200)]
@@ -36,6 +40,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Create a new user.</summary>
+        /// <param name="createUserDto">User data</param>
         [HttpPost("")]
         [EndpointSummary("Create User")]
         [Consumes("application/json")]
@@ -48,6 +53,8 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Update an existing user.</summary>
+        /// <param name="id">User ID</param>
+        /// <param name="updateUserDto">Updated user data</param>
         [HttpPut("{id}")]
         [EndpointSummary("Update User")]
         [Consumes("application/json")]
@@ -62,6 +69,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Delete a user by ID.</summary>
+        /// <param name="id">User ID</param>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete User")]
         [ProducesResponseType(204)]

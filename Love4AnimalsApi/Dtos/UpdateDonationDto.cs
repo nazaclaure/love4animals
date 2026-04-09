@@ -1,8 +1,12 @@
-namespace Love4AnimalsApi.Dtos
+﻿using System.ComponentModel.DataAnnotations;
+namespace Love4AnimalsApi.Dtos;
+
+public class UpdateDonationDto
 {
-    public class UpdateDonationDto
-    {
-        public double Amount { get; set; }
-        public string Status { get; set; } = string.Empty;
-    }
+    [Required][Range(0.01, double.MaxValue)]
+    public decimal Amount { get; set; }
+    [MaxLength(500)]
+    public string? Message { get; set; }
+    [Required][MaxLength(50)]
+    public string Status { get; set; } = "";
 }

@@ -1,11 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+
 namespace Love4AnimalsApi.Controllers
 {
+    /// <summary>Manage campaigns.</summary>
     [Route("v1/campaigns")]
     [ApiController]
     [Tags("Campaign")]
+    [Produces("application/json")]
     public class CampaignController : ControllerBase
     {
         private ICampaignService campaignService;
@@ -24,6 +27,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Get a campaign by ID.</summary>
+        /// <param name="id">Campaign ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get Campaign By Id")]
         [ProducesResponseType<GetCampaignDto>(200)]
@@ -36,6 +40,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Create a new campaign.</summary>
+        /// <param name="createCampaignDto">Campaign data</param>
         [HttpPost("")]
         [EndpointSummary("Create Campaign")]
         [Consumes("application/json")]
@@ -48,6 +53,8 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Update an existing campaign.</summary>
+        /// <param name="id">Campaign ID</param>
+        /// <param name="updateCampaignDto">Updated campaign data</param>
         [HttpPut("{id}")]
         [EndpointSummary("Update Campaign")]
         [Consumes("application/json")]
@@ -62,6 +69,7 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Delete a campaign by ID.</summary>
+        /// <param name="id">Campaign ID</param>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Campaign")]
         [ProducesResponseType(204)]

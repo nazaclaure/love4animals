@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using Love4AnimalsApi.Interfaces;
@@ -10,13 +10,15 @@ namespace Love4AnimalsApi.Repositories
     {
         private static List<Donation> _donations = new List<Donation>
         {
-            new Donation { Id = 1, Amount = 50.00, Date = DateTime.UtcNow, Status = "Completed", UserId = 1, CampaignId = 1 }
+            new Donation { Id = 1, Amount = 50.00m, Date = DateTime.UtcNow, Status = "Completed", UserId = 1, CampaignId = 1, Message = "Test donation" }
         };
         private static long _nextId = 2;
 
-        public List<Donation> GetDonations() => _donations;
-        public Donation? GetDonation(long id) => _donations.Find(d => d.Id == id);
-        public List<Donation> GetDonationsByCampaign(long id) => _donations.Where(d => d.CampaignId == id).ToList();
+        public List<Donation> GetDonationsByCampaign(long campaignId) =>
+            _donations.Where(d => d.CampaignId == campaignId).ToList();
+
+        public Donation? GetDonation(long campaignId, long userId) =>
+            _donations.FirstOrDefault(d => d.CampaignId == campaignId && d.UserId == userId);
 
         public Donation CreateDonation(Donation donation)
         {
@@ -25,19 +27,20 @@ namespace Love4AnimalsApi.Repositories
             return donation;
         }
 
-        public Donation? UpdateDonation(Donation donation)
+        public Donation? UpdateDonation(long campaignId, long userId, Donation updatedData)
         {
-            var existing = GetDonation(donation.Id);
+            var existing = GetDonation(campaignId, userId);
             if (existing != null) {
-                existing.Amount = donation.Amount;
-                existing.Status = donation.Status;
+                existing.Amount = updatedData.Amount;
+                existing.Message = updatedData.Message;
+                existing.Status = updatedData.Status;
             }
             return existing;
         }
 
-        public bool DeleteDonation(long id)
+        public bool DeleteDonation(long campaignId, long userId)
         {
-            var existing = GetDonation(id);
+            var existing = GetDonation(campaignId, userId);
             if (existing == null) return false;
             _donations.Remove(existing);
             return true;
