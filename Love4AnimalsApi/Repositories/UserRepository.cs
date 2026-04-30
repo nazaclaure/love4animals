@@ -1,44 +1,55 @@
+﻿using Love4AnimalsApi.Data;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
-namespace Love4AnimalsApi.Repositories;
-public class UserRepository : IUserRepository
+using Microsoft.EntityFrameworkCore;
+
+namespace Love4AnimalsApi.Repositories
 {
-    private List<User> Users { get; set; }
-    public UserRepository()
+    public class UserRepository : IUserRepository
     {
-        this.Users = [];
-        User newUser = new(1, "Nazaret", "nazaret@gmail.com", "1234", "https://picsum.photos/200");
-        this.Users.Add(newUser);
-    }
-    public List<User> GetUsers()
-    {
-        return this.Users;
-    }
-    public User? GetUser(long id)
-    {
-        return this.Users.FirstOrDefault(u => u.Id == id);
-    }
-    public User CreateUser(User user)
-    {
-        user.Id = this.Users.Any() ? this.Users.Max(u => u.Id) + 1 : 1;
-        this.Users.Add(user);
-        return user;
-    }
-    public User? UpdateUser(long id, User user)
-    {
-        User? existingUser = this.Users.FirstOrDefault(u => u.Id == id);
-        if (existingUser == null) return null;
-        existingUser.Name = user.Name;
-        existingUser.Email = user.Email;
-        existingUser.Password = user.Password;
-        existingUser.ProfilePicture = user.ProfilePicture;
-        return existingUser;
-    }
-    public bool DeleteUser(long id)
-    {
-        User? existingUser = this.Users.FirstOrDefault(u => u.Id == id);
-        if (existingUser == null) return false;
-        this.Users.Remove(existingUser);
-        return true;
+        private readonly AppDbContext _context;
+
+        public UserRepository(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        public List<User> GetUsers()
+        {
+            return _context.Users.AsNoTracking().ToList();
+        }
+
+        public User? GetUser(long id)
+        {
+            return _context.Users.Find(id);
+        }
+
+        public User CreateUser(User user)
+        {
+            _context.Users.Add(user);
+            _context.SaveChanges();
+            return user;
+        }
+
+        public User? UpdateUser(long id, User user)
+        {
+            var existing = _context.Users.Find(id);
+            if (existing == null) return null;
+            existing.Name = user.Name;
+            existing.Email = user.Email;
+            existing.Password = user.Password;
+            existing.ProfilePicture = user.ProfilePicture;
+            _context.SaveChanges();
+            return existing;
+        }
+
+        public bool DeleteUser(long id)
+        {
+            var existing = _context.Users.Find(id);
+            if (existing == null) return false;
+            _context.Users.Remove(existing);
+            _context.SaveChanges();
+            return true;
+        }
     }
 }
