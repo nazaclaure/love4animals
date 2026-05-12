@@ -11,6 +11,7 @@ namespace Love4AnimalsApi.Data
         public DbSet<Campaign> Campaigns => Set<Campaign>();
         public DbSet<Post> Posts => Set<Post>();
         public DbSet<Comment> Comments => Set<Comment>();
+        public DbSet<Donation> Donations => Set<Donation>();
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,6 +47,15 @@ namespace Love4AnimalsApi.Data
                 e.Property(c => c.Content).IsRequired();
                 e.HasOne<Post>().WithMany().HasForeignKey(c => c.PostId).OnDelete(DeleteBehavior.Cascade);
                 e.HasOne<User>().WithMany().HasForeignKey(c => c.UserId);
+            });
+
+            modelBuilder.Entity<Donation>(e =>
+            {
+                e.HasKey(d => d.Id);
+                e.Property(d => d.Amount).HasPrecision(18, 2);
+                e.Property(d => d.Status).IsRequired().HasMaxLength(50);
+                e.HasOne<User>().WithMany().HasForeignKey(d => d.UserId);
+                e.HasOne<Campaign>().WithMany().HasForeignKey(d => d.CampaignId);
             });
         }
     }

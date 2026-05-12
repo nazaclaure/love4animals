@@ -1,47 +1,55 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Love4AnimalsApi.Data;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Love4AnimalsApi.Repositories
 {
     public class DonationRepository : IDonationRepository
     {
-        private static List<Donation> _donations = new List<Donation>
+        private readonly AppDbContext _context;
+
+        public DonationRepository(AppDbContext context)
         {
-            new Donation { Id = 1, Amount = 50.00m, Date = DateTime.UtcNow, Status = "Completed", UserId = 1, CampaignId = 1, Message = "Test donation" }
-        };
-        private static long _nextId = 2;
+            _context = context;
+        }
 
-        public List<Donation> GetDonationsByCampaign(long campaignId) =>
-            _donations.Where(d => d.CampaignId == campaignId).ToList();
+        public List<Donation> GetDonationsByCampaign(long campaignId)
+        {
+            return _context.Donations.AsNoTracking()
+                .Where(d => d.CampaignId == campaignId)
+                .ToList();
+        }
 
-        public Donation? GetDonation(long id) =>
-            _donations.FirstOrDefault(d => d.Id == id);
+        public Donation? GetDonation(long id)
+        {
+            return _context.Donations.Find(id);
+        }
 
         public Donation CreateDonation(Donation donation)
         {
-            donation.Id = _nextId++;
-            _donations.Add(donation);
+            _context.Donations.Add(donation);
+            _context.SaveChanges();
             return donation;
         }
 
         public Donation? UpdateDonation(long id, Donation updatedData)
         {
-            var existing = GetDonation(id);
-            if (existing != null) {
-                existing.Amount = updatedData.Amount;
-                existing.Message = updatedData.Message;
-                existing.Status = updatedData.Status;
-            }
+            var existing = _context.Donations.Find(id);
+            if (existing == null) return null;
+            existing.Amount = updatedData.Amount;
+            existing.Message = updatedData.Message;
+            existing.Status = updatedData.Status;
+            _context.SaveChanges();
             return existing;
         }
 
         public bool DeleteDonation(long id)
         {
-            var existing = GetDonation(id);
+            var existing = _context.Donations.Find(id);
             if (existing == null) return false;
-            _donations.Remove(existing);
+            _context.Donations.Remove(existing);
+            _context.SaveChanges();
             return true;
         }
     }
