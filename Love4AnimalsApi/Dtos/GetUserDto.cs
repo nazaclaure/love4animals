@@ -6,4 +6,4 @@ public record GetUserDto (
     string Email,
     string ProfilePicture
 );
-/* el Password no va en el DTO de respuesta por seguridad, no queremos devolverlo en las consultas*/
+/* el Password no va en esto de respuesta por seguridad, no queremos devolverlo en las consultas*/

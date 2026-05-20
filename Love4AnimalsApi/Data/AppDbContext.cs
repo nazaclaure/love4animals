@@ -20,7 +20,7 @@ namespace Love4AnimalsApi.Data
                 e.HasKey(u => u.Id);
                 e.Property(u => u.Name).IsRequired().HasMaxLength(100);
                 e.Property(u => u.Email).IsRequired().HasMaxLength(200);
-                e.Property(u => u.Password).IsRequired().HasMaxLength(100);
+                e.Property(u => u.PasswordHash).IsRequired();
             });
 
             modelBuilder.Entity<Campaign>(e =>

@@ -7,7 +7,7 @@ public class CreateUserDto
     public string Name { get; set; } = "";
     [Required][EmailAddress][MaxLength(200)]
     public string Email { get; set; } = "";
-    [Required][MaxLength(100)]
+    [Required][MinLength(6)][MaxLength(100)]
     public string Password { get; set; } = "";
     [Required]
     public string ProfilePicture { get; set; } = "";

@@ -27,7 +27,6 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Get a user by ID.</summary>
-        /// <param name="id">User ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get User By Id")]
         [ProducesResponseType<GetUserDto>(200)]
@@ -39,10 +38,9 @@ namespace Love4AnimalsApi.Controllers
             return Ok(user);
         }
 
-        /// <summary>Create a new user.</summary>
-        /// <param name="createUserDto">User data</param>
-        [HttpPost("")]
-        [EndpointSummary("Create User")]
+        /// <summary>Register a new user.</summary>
+        [HttpPost("register")]
+        [EndpointSummary("Register User")]
         [Consumes("application/json")]
         [ProducesResponseType<GetUserDto>(201)]
         [ProducesResponseType(400)]
@@ -52,9 +50,20 @@ namespace Love4AnimalsApi.Controllers
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
         }
 
+        /// <summary>Login with email and password.</summary>
+        [HttpPost("login")]
+        [EndpointSummary("Login")]
+        [Consumes("application/json")]
+        [ProducesResponseType<GetUserDto>(200)]
+        [ProducesResponseType(401)]
+        public ActionResult<GetUserDto> Login([FromBody] LoginDto loginDto)
+        {
+            var user = this.userService.Login(loginDto);
+            if (user == null) return Unauthorized();
+            return Ok(user);
+        }
+
         /// <summary>Update an existing user.</summary>
-        /// <param name="id">User ID</param>
-        /// <param name="updateUserDto">Updated user data</param>
         [HttpPut("{id}")]
         [EndpointSummary("Update User")]
         [Consumes("application/json")]
@@ -69,7 +78,6 @@ namespace Love4AnimalsApi.Controllers
         }
 
         /// <summary>Delete a user by ID.</summary>
-        /// <param name="id">User ID</param>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete User")]
         [ProducesResponseType(204)]
