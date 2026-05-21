@@ -1,4 +1,4 @@
-using Love4AnimalsApi.Dtos;
+﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Models;
 namespace Love4AnimalsApi.Services;
@@ -22,13 +22,17 @@ public class CampaignService : ICampaignService
     }
     public GetCampaignDto CreateCampaign(CreateCampaignDto createCampaignDto)
     {
-        Campaign campaign = new(0, createCampaignDto.Name, createCampaignDto.Description, createCampaignDto.FundraisingGoal, 0.0, createCampaignDto.StartDate, createCampaignDto.EndDate);
+        var startDate = DateTime.SpecifyKind(createCampaignDto.StartDate, DateTimeKind.Utc);
+        var endDate = DateTime.SpecifyKind(createCampaignDto.EndDate, DateTimeKind.Utc);
+        Campaign campaign = new(0, createCampaignDto.Name, createCampaignDto.Description, createCampaignDto.FundraisingGoal, 0.0, startDate, endDate);
         Campaign createdCampaign = campaignRepository.CreateCampaign(campaign);
         return new GetCampaignDto(createdCampaign.Id, createdCampaign.Name, createdCampaign.Description, createdCampaign.FundraisingGoal, createdCampaign.TotalRaised, createdCampaign.StartDate, createdCampaign.EndDate);
     }
     public GetCampaignDto? UpdateCampaign(long id, UpdateCampaignDto updateCampaignDto)
     {
-        Campaign campaign = new(id, updateCampaignDto.Name, updateCampaignDto.Description, updateCampaignDto.FundraisingGoal, 0.0, updateCampaignDto.StartDate, updateCampaignDto.EndDate);
+        var startDate = DateTime.SpecifyKind(updateCampaignDto.StartDate, DateTimeKind.Utc);
+        var endDate = DateTime.SpecifyKind(updateCampaignDto.EndDate, DateTimeKind.Utc);
+        Campaign campaign = new(id, updateCampaignDto.Name, updateCampaignDto.Description, updateCampaignDto.FundraisingGoal, 0.0, startDate, endDate);
         Campaign? updatedCampaign = campaignRepository.UpdateCampaign(id, campaign);
         if (updatedCampaign == null) return null;
         return new GetCampaignDto(updatedCampaign.Id, updatedCampaign.Name, updatedCampaign.Description, updatedCampaign.FundraisingGoal, updatedCampaign.TotalRaised, updatedCampaign.StartDate, updatedCampaign.EndDate);
