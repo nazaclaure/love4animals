@@ -1,12 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Love4AnimalsApi.Controllers
 {
-    /// <summary>Manage posts.</summary>
     [Route("v1/posts")]
     [ApiController]
+    [Authorize]
     [Tags("Post")]
     [Produces("application/json")]
     public class PostController : ControllerBase
@@ -17,7 +19,6 @@ namespace Love4AnimalsApi.Controllers
             this.postService = postService;
         }
 
-        /// <summary>Get all posts.</summary>
         [HttpGet("")]
         [EndpointSummary("Get All Posts")]
         [ProducesResponseType<List<GetPostDto>>(200)]
@@ -26,8 +27,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(this.postService.GetPosts());
         }
 
-        /// <summary>Get a post by ID.</summary>
-        /// <param name="id">Post ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get Post By Id")]
         [ProducesResponseType<GetPostDto>(200)]
@@ -38,10 +37,9 @@ namespace Love4AnimalsApi.Controllers
             if (post == null) return NotFound();
             return Ok(post);
         }
-
-        /// <summary>Create a new post.</summary>
-        /// <param name="createPostDto">Post data</param>
+//solo misionero puede crear, actualizar o borrar post, user id del token con var userid
         [HttpPost("")]
+        [Authorize(Roles = "Misionero")]
         [EndpointSummary("Create Post")]
         [Consumes("application/json")]
         [ProducesResponseType<GetPostDto>(201)]
@@ -49,15 +47,15 @@ namespace Love4AnimalsApi.Controllers
         [ProducesResponseType(400)]
         public ActionResult<GetPostDto> CreatePost([FromBody] CreatePostDto createPostDto)
         {
+            var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            createPostDto.UserId = userId;
             var post = this.postService.CreatePost(createPostDto);
             if (post == null) return NotFound();
             return CreatedAtAction(nameof(GetPost), new { id = post.Id }, post);
         }
 
-        /// <summary>Update an existing post.</summary>
-        /// <param name="id">Post ID</param>
-        /// <param name="updatePostDto">Updated post data</param>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Misionero")]
         [EndpointSummary("Update Post")]
         [Consumes("application/json")]
         [ProducesResponseType<GetPostDto>(200)]
@@ -70,9 +68,8 @@ namespace Love4AnimalsApi.Controllers
             return Ok(post);
         }
 
-        /// <summary>Delete a post by ID.</summary>
-        /// <param name="id">Post ID</param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Misionero")]
         [EndpointSummary("Delete Post")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]

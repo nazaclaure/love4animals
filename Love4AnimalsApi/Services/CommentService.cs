@@ -34,7 +34,13 @@ public class CommentService : ICommentService
         if (post == null) return null;
         User? user = userRepository.GetUser(createCommentDto.UserId);
         if (user == null) return null;
-        Comment comment = new(0, createCommentDto.Content, DateTime.Now, createCommentDto.UserId, postId);
+        Comment comment = new Comment
+        {
+            Content = createCommentDto.Content,
+            CreatedAt = DateTime.Now,
+            UserId = createCommentDto.UserId,
+            PostId = postId
+        };
         Comment createdComment = commentRepository.CreateComment(comment);
         return new GetCommentDto(createdComment.Id, createdComment.Content, createdComment.CreatedAt, createdComment.UserId, createdComment.PostId);
     }
@@ -42,8 +48,11 @@ public class CommentService : ICommentService
     {
         Post? post = postRepository.GetPost(postId);
         if (post == null) return null;
-        Comment comment = new(id, updateCommentDto.Content, DateTime.Now, 0, postId);
-        Comment? updatedComment = commentRepository.UpdateComment(id, comment);
+        Comment? existing = commentRepository.GetComment(postId, id);
+        if (existing == null) return null;
+        existing.Content = updateCommentDto.Content;
+        existing.CreatedAt = DateTime.Now;
+        Comment? updatedComment = commentRepository.UpdateComment(id, existing);
         if (updatedComment == null) return null;
         return new GetCommentDto(updatedComment.Id, updatedComment.Content, updatedComment.CreatedAt, updatedComment.UserId, updatedComment.PostId);
     }

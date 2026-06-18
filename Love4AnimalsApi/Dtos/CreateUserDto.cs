@@ -11,4 +11,6 @@ public class CreateUserDto
     public string Password { get; set; } = "";
     [Required]
     public string ProfilePicture { get; set; } = "";
+    [Required][RegularExpression("^(Misionero|Donador)$", ErrorMessage = "El rol debe ser Misionero o Donador.")]
+    public string Role { get; set; } = "Donador";
 }

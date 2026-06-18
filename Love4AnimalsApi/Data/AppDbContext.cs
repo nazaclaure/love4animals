@@ -21,6 +21,8 @@ namespace Love4AnimalsApi.Data
                 e.Property(u => u.Name).IsRequired().HasMaxLength(100);
                 e.Property(u => u.Email).IsRequired().HasMaxLength(200);
                 e.Property(u => u.PasswordHash).IsRequired();
+                e.Property(u => u.Role).IsRequired().HasMaxLength(50).HasDefaultValue("Donador");
+                e.HasIndex(u => u.Email).IsUnique();
             });
 
             modelBuilder.Entity<Campaign>(e =>
@@ -30,6 +32,8 @@ namespace Love4AnimalsApi.Data
                 e.Property(c => c.Description).IsRequired().HasMaxLength(500);
                 e.Property(c => c.FundraisingGoal).HasPrecision(18, 2);
                 e.Property(c => c.TotalRaised).HasPrecision(18, 2);
+                e.HasOne<User>().WithMany().HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Post>(e =>
@@ -37,16 +41,20 @@ namespace Love4AnimalsApi.Data
                 e.HasKey(p => p.Id);
                 e.Property(p => p.Description).IsRequired();
                 e.Property(p => p.ImageURL).IsRequired();
-                e.HasOne<User>().WithMany().HasForeignKey(p => p.UserId);
-                e.HasOne<Campaign>().WithMany().HasForeignKey(p => p.CampaignId);
+                e.HasOne<User>().WithMany().HasForeignKey(p => p.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne<Campaign>().WithMany().HasForeignKey(p => p.CampaignId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Comment>(e =>
             {
                 e.HasKey(c => c.Id);
                 e.Property(c => c.Content).IsRequired();
-                e.HasOne<Post>().WithMany().HasForeignKey(c => c.PostId).OnDelete(DeleteBehavior.Cascade);
-                e.HasOne<User>().WithMany().HasForeignKey(c => c.UserId);
+                e.HasOne<Post>().WithMany().HasForeignKey(c => c.PostId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne<User>().WithMany().HasForeignKey(c => c.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<Donation>(e =>
@@ -54,8 +62,10 @@ namespace Love4AnimalsApi.Data
                 e.HasKey(d => d.Id);
                 e.Property(d => d.Amount).HasPrecision(18, 2);
                 e.Property(d => d.Status).IsRequired().HasMaxLength(50);
-                e.HasOne<User>().WithMany().HasForeignKey(d => d.UserId);
-                e.HasOne<Campaign>().WithMany().HasForeignKey(d => d.CampaignId);
+                e.HasOne<User>().WithMany().HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.Cascade);
+                e.HasOne<Campaign>().WithMany().HasForeignKey(d => d.CampaignId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }

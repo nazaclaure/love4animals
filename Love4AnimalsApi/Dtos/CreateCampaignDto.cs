@@ -7,10 +7,11 @@ public class CreateCampaignDto
     public string Name { get; set; } = "";
     [Required][MaxLength(500)]
     public string Description { get; set; } = "";
-    [Required][Range(0, double.MaxValue)]
+    [Required]
     public double FundraisingGoal { get; set; }
     [Required]
     public DateTime StartDate { get; set; }
     [Required]
     public DateTime EndDate { get; set; }
+    public long UserId { get; set; }
 }

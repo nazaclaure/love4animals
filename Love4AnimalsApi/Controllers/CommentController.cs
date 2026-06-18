@@ -1,12 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-
+using System.Security.Claims;
+//todos con autoriizacion pero usa id del token var userid
 namespace Love4AnimalsApi.Controllers
 {
-    /// <summary>Manage comments on posts.</summary>
     [Route("v1/posts/{postId}/comments")]
     [ApiController]
+    [Authorize]
     [Tags("Comment")]
     [Produces("application/json")]
     public class CommentController : ControllerBase
@@ -17,8 +19,6 @@ namespace Love4AnimalsApi.Controllers
             this.commentService = commentService;
         }
 
-        /// <summary>Get all comments for a post.</summary>
-        /// <param name="postId">Post ID</param>
         [HttpGet("")]
         [EndpointSummary("Get All Comments")]
         [ProducesResponseType<List<GetCommentDto>>(200)]
@@ -30,9 +30,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(comments);
         }
 
-        /// <summary>Get a comment by ID.</summary>
-        /// <param name="postId">Post ID</param>
-        /// <param name="id">Comment ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get Comment By Id")]
         [ProducesResponseType<GetCommentDto>(200)]
@@ -44,9 +41,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(comment);
         }
 
-        /// <summary>Create a new comment on a post.</summary>
-        /// <param name="postId">Post ID</param>
-        /// <param name="createCommentDto">Comment data</param>
         [HttpPost("")]
         [EndpointSummary("Create Comment")]
         [Consumes("application/json")]
@@ -55,15 +49,13 @@ namespace Love4AnimalsApi.Controllers
         [ProducesResponseType(400)]
         public ActionResult<GetCommentDto> CreateComment(long postId, [FromBody] CreateCommentDto createCommentDto)
         {
+            var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            createCommentDto.UserId = userId;
             var comment = this.commentService.CreateComment(postId, createCommentDto);
             if (comment == null) return NotFound();
             return CreatedAtAction(nameof(GetComment), new { postId = postId, id = comment.Id }, comment);
         }
 
-        /// <summary>Update an existing comment.</summary>
-        /// <param name="postId">Post ID</param>
-        /// <param name="id">Comment ID</param>
-        /// <param name="updateCommentDto">Updated comment data</param>
         [HttpPut("{id}")]
         [EndpointSummary("Update Comment")]
         [Consumes("application/json")]
@@ -77,9 +69,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(comment);
         }
 
-        /// <summary>Delete a comment by ID.</summary>
-        /// <param name="postId">Post ID</param>
-        /// <param name="id">Comment ID</param>
         [HttpDelete("{id}")]
         [EndpointSummary("Delete Comment")]
         [ProducesResponseType(204)]

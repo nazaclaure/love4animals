@@ -1,10 +1,11 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Love4AnimalsApi.Controllers
 {
-    /// <summary>Manage users.</summary>
     [Route("v1/users")]
     [ApiController]
     [Tags("User")]
@@ -17,18 +18,18 @@ namespace Love4AnimalsApi.Controllers
             this.userService = userService;
         }
 
-        /// <summary>Get all users.</summary>
         [HttpGet("")]
-        [EndpointSummary("Get All Users")]
+        [Authorize]
+        [EndpointSummary("Get all users.")]
         [ProducesResponseType<List<GetUserDto>>(200)]
         public ActionResult<List<GetUserDto>> GetUsers()
         {
             return Ok(this.userService.GetUsers());
         }
 
-        /// <summary>Get a user by ID.</summary>
         [HttpGet("{id}")]
-        [EndpointSummary("Get User By Id")]
+        [Authorize]
+        [EndpointSummary("Get a user by ID.")]
         [ProducesResponseType<GetUserDto>(200)]
         [ProducesResponseType(404)]
         public ActionResult<GetUserDto> GetUser(long id)
@@ -38,48 +39,74 @@ namespace Love4AnimalsApi.Controllers
             return Ok(user);
         }
 
-        /// <summary>Register a new user.</summary>
         [HttpPost("register")]
-        [EndpointSummary("Register User")]
-        [Consumes("application/json")]
+        [AllowAnonymous]
+        [EndpointSummary("Register a new user.")]
         [ProducesResponseType<GetUserDto>(201)]
         [ProducesResponseType(400)]
         public ActionResult<GetUserDto> CreateUser([FromBody] CreateUserDto createUserDto)
         {
-            var user = this.userService.CreateUser(createUserDto);
-            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            try
+            {
+                var user = this.userService.CreateUser(createUserDto);
+                return CreatedAtAction(nameof(GetUser), new { id = user.Id }, user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
-        /// <summary>Login with email and password.</summary>
         [HttpPost("login")]
-        [EndpointSummary("Login")]
-        [Consumes("application/json")]
+        [AllowAnonymous]
+        [EndpointSummary("Login with email and password.")]
+        [ProducesResponseType<LoginResponseDto>(200)]
+        [ProducesResponseType(401)]
+        public ActionResult<LoginResponseDto> Login([FromBody] LoginDto loginDto)
+        {
+            var response = this.userService.Login(loginDto);
+            if (response == null) return Unauthorized();
+            return Ok(response);
+        }
+
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        [EndpointSummary("Refresh JWT token.")]
+        [ProducesResponseType<LoginResponseDto>(200)]
+        [ProducesResponseType(401)]
+        public ActionResult<LoginResponseDto> Refresh([FromBody] RefreshTokenDto dto)
+        {
+            var response = this.userService.RefreshToken(dto.RefreshToken);
+            if (response == null) return Unauthorized();
+            return Ok(response);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize]
+        [EndpointSummary("Update a user.")]
         [ProducesResponseType<GetUserDto>(200)]
         [ProducesResponseType(401)]
-        public ActionResult<GetUserDto> Login([FromBody] LoginDto loginDto)
-        {
-            var user = this.userService.Login(loginDto);
-            if (user == null) return Unauthorized();
-            return Ok(user);
-        }
-
-        /// <summary>Update an existing user.</summary>
-        [HttpPut("{id}")]
-        [EndpointSummary("Update User")]
-        [Consumes("application/json")]
-        [ProducesResponseType<GetUserDto>(200)]
         [ProducesResponseType(404)]
-        [ProducesResponseType(400)]
         public ActionResult<GetUserDto> UpdateUser(long id, [FromBody] UpdateUserDto updateUserDto)
         {
-            var user = this.userService.UpdateUser(id, updateUserDto);
-            if (user == null) return NotFound();
-            return Ok(user);
+            var tokenUserId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            if (tokenUserId != id)
+                return Unauthorized(new { error = "No puedes editar el perfil de otro usuario." });
+            try
+            {
+                var user = this.userService.UpdateUser(id, updateUserDto);
+                if (user == null) return NotFound();
+                return Ok(user);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { error = ex.Message });
+            }
         }
 
-        /// <summary>Delete a user by ID.</summary>
         [HttpDelete("{id}")]
-        [EndpointSummary("Delete User")]
+        [Authorize(Roles = "Misionero")]
+        [EndpointSummary("Delete a user.")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         public IActionResult DeleteUser(long id)

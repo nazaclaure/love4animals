@@ -7,7 +7,6 @@ public class CreatePostDto
     [Required]
     public string ImageURL { get; set; } = "";
     [Required]
-    public long UserId { get; set; }
-    [Required]
     public long CampaignId { get; set; }
+    public long UserId { get; set; }
 }

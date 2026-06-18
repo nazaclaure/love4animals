@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Love4AnimalsApi.Interfaces;
 using Love4AnimalsApi.Dtos;
-
+using System.Security.Claims;
+//todos con autoriizacion pero usa id del token var userid
 namespace Love4AnimalsApi.Controllers
 {
-    /// <summary>Manage donations to campaigns.</summary>
     [ApiController]
     [Route("v1/donations")]
+    [Authorize]
     [Tags("Donations")]
     [Produces("application/json")]
     public class DonationController : ControllerBase
@@ -18,8 +20,6 @@ namespace Love4AnimalsApi.Controllers
             _donationService = donationService;
         }
 
-        /// <summary>Get all donations for a campaign.</summary>
-        /// <param name="campaignId">Campaign ID</param>
         [HttpGet("campaign/{campaignId}")]
         [EndpointSummary("Get all donations for a campaign.")]
         [ProducesResponseType<List<GetDonationDto>>(200)]
@@ -31,8 +31,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(donations);
         }
 
-        /// <summary>Create a new donation.</summary>
-        /// <param name="dto">Donation data</param>
         [HttpPost]
         [EndpointSummary("Create a new donation.")]
         [Consumes("application/json")]
@@ -43,6 +41,8 @@ namespace Love4AnimalsApi.Controllers
         {
             try
             {
+                var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+                dto.UserId = userId;
                 var created = _donationService.CreateDonation(dto);
                 return CreatedAtAction(nameof(GetDonation), new { campaignId = created.CampaignId, id = created.Id }, created);
             }
@@ -52,9 +52,6 @@ namespace Love4AnimalsApi.Controllers
             }
         }
 
-        /// <summary>Get a donation by ID.</summary>
-        /// <param name="campaignId">Campaign ID</param>
-        /// <param name="id">Donation ID</param>
         [HttpGet("campaign/{campaignId}/{id}")]
         [EndpointSummary("Get a donation by ID.")]
         [ProducesResponseType<GetDonationDto>(200)]
@@ -66,10 +63,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(donation);
         }
 
-        /// <summary>Update an existing donation.</summary>
-        /// <param name="campaignId">Campaign ID</param>
-        /// <param name="id">Donation ID</param>
-        /// <param name="dto">Updated donation data</param>
         [HttpPut("campaign/{campaignId}/{id}")]
         [EndpointSummary("Update an existing donation.")]
         [Consumes("application/json")]
@@ -85,9 +78,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(updated);
         }
 
-        /// <summary>Delete a donation by ID.</summary>
-        /// <param name="campaignId">Campaign ID</param>
-        /// <param name="id">Donation ID</param>
         [HttpDelete("campaign/{campaignId}/{id}")]
         [EndpointSummary("Delete a donation by ID.")]
         [ProducesResponseType(204)]

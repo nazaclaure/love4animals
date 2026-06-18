@@ -1,7 +1,7 @@
 ﻿namespace Love4AnimalsApi.Models;
 public class Campaign
 {
-    public Campaign(long Id, string Name, string Description, double FundraisingGoal, double TotalRaised, DateTime StartDate, DateTime EndDate)
+    public Campaign(long Id, string Name, string Description, double FundraisingGoal, double TotalRaised, DateTime StartDate, DateTime EndDate, long UserId)
     {
         this.Id = Id;
         this.Name = Name;
@@ -10,6 +10,7 @@ public class Campaign
         this.TotalRaised = TotalRaised;
         this.StartDate = StartDate;
         this.EndDate = EndDate;
+        this.UserId = UserId;
     }
     public long Id { get; set; }
     public string Name { get; set; }
@@ -18,4 +19,5 @@ public class Campaign
     public double TotalRaised { get; set; }
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
+    public long UserId { get; set; }
 }

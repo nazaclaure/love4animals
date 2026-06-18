@@ -6,5 +6,6 @@ public record GetCampaignDto (
     double FundraisingGoal,
     double TotalRaised,
     DateTime StartDate,
-    DateTime EndDate
+    DateTime EndDate,
+    long UserId
 );

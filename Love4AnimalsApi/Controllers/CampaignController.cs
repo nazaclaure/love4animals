@@ -1,12 +1,14 @@
 ﻿using Love4AnimalsApi.Dtos;
 using Love4AnimalsApi.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Love4AnimalsApi.Controllers
 {
-    /// <summary>Manage campaigns.</summary>
     [Route("v1/campaigns")]
     [ApiController]
+    [Authorize]
     [Tags("Campaign")]
     [Produces("application/json")]
     public class CampaignController : ControllerBase
@@ -17,7 +19,6 @@ namespace Love4AnimalsApi.Controllers
             this.campaignService = campaignService;
         }
 
-        /// <summary>Get all campaigns.</summary>
         [HttpGet("")]
         [EndpointSummary("Get All Campaigns")]
         [ProducesResponseType<List<GetCampaignDto>>(200)]
@@ -26,8 +27,6 @@ namespace Love4AnimalsApi.Controllers
             return Ok(this.campaignService.GetCampaigns());
         }
 
-        /// <summary>Get a campaign by ID.</summary>
-        /// <param name="id">Campaign ID</param>
         [HttpGet("{id}")]
         [EndpointSummary("Get Campaign By Id")]
         [ProducesResponseType<GetCampaignDto>(200)]
@@ -38,24 +37,25 @@ namespace Love4AnimalsApi.Controllers
             if (campaign == null) return NotFound();
             return Ok(campaign);
         }
-
-        /// <summary>Create a new campaign.</summary>
-        /// <param name="createCampaignDto">Campaign data</param>
+//solo misionero puede crear, actualizar o borrar campaña, user id del token var userid
         [HttpPost("")]
+        [Authorize(Roles = "Misionero")]
         [EndpointSummary("Create Campaign")]
         [Consumes("application/json")]
         [ProducesResponseType<GetCampaignDto>(201)]
+        [ProducesResponseType(404)]
         [ProducesResponseType(400)]
         public ActionResult<GetCampaignDto> CreateCampaign([FromBody] CreateCampaignDto createCampaignDto)
         {
+            var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            createCampaignDto.UserId = userId;
             var campaign = this.campaignService.CreateCampaign(createCampaignDto);
+            if (campaign == null) return NotFound();
             return CreatedAtAction(nameof(GetCampaign), new { id = campaign.Id }, campaign);
         }
 
-        /// <summary>Update an existing campaign.</summary>
-        /// <param name="id">Campaign ID</param>
-        /// <param name="updateCampaignDto">Updated campaign data</param>
         [HttpPut("{id}")]
+        [Authorize(Roles = "Misionero")]
         [EndpointSummary("Update Campaign")]
         [Consumes("application/json")]
         [ProducesResponseType<GetCampaignDto>(200)]
@@ -68,9 +68,8 @@ namespace Love4AnimalsApi.Controllers
             return Ok(campaign);
         }
 
-        /// <summary>Delete a campaign by ID.</summary>
-        /// <param name="id">Campaign ID</param>
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Misionero")]
         [EndpointSummary("Delete Campaign")]
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
