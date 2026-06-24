@@ -14,14 +14,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 var cs = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<AppDbContext>(opt => opt.UseNpgsql(cs));
+//ESTA PARTE ES OARA CONECTARSE A LA BD, AL CONTENEDOR DE POSTGRE
+//JUNTO CON EL APPDB CONTEXT Y DEFINE LAS REGLAS DEL ESQUEMA AHI
+//EF CORE DE SQL PARA PSTGRE Y EL PG ADMIN PARA VER COMO ME FUNCIONA LA BD
 
+//DOCKER ES NUESTRO CONTENEDOR Y SE RELACIONA CON EL PODMAN PARA EL DEPLOY
+
+//REDIS!!!
 //BUILD SERV con redis puerto para cachear y no ir todo el tiempo a la bd
 builder.Services.AddStackExchangeRedisCache(opts =>
 {
     opts.Configuration = builder.Configuration.GetConnectionString("Redis");
     opts.InstanceName = "love4animals:";
 });
+//EN LOS SERVICES SE DETERMINAN EL BORRADO DE LA CACHE COMO EN DONATION SERVICE
 
+//CORS PARA QUE SOLO SE CONECTE A NUESTRA API Y NO OTRO EXTERNO
 //comunicamos API con navegador, nos sirve para front
 builder.Services.AddCors(options =>
 {
@@ -47,15 +55,16 @@ builder.Services.AddRateLimiter(o =>
     o.RejectionStatusCode = 429;
 });
 
+//IMPORTANTE PARA JWT
 var jwt = builder.Configuration.GetSection("Jwt");
 var key = Encoding.UTF8.GetBytes(jwt["Key"]!);
-//validamos jwt tokens
+//VALIDAMOS PARA JWT
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opts =>
     {
         opts.TokenValidationParameters = new TokenValidationParameters
         {
-            ValidateIssuer = true,
+            ValidateIssuer = true, 
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
@@ -64,7 +73,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
     });
-
+//PARA SABER COMO IDENTIFICAR EL USER EN JWT ES CON EL TOKE, DIRECTI AHI SE IDENTIFICA
 builder.Services.AddAuthorization();
 
 builder.Services.AddControllers();
@@ -117,3 +126,9 @@ app.UseAuthorization();
 app.MapControllers().RequireRateLimiting("porIP");
 
 app.Run();
+
+//DEPLOY:
+//BUILD DE LA IMAGEN, PUSH A ECR, SSH A LA EC2, BAJAR ACTUALIZAR Y LEVANTA, 
+//LO DEL NGINX ES COMO FUENTE PARA QUE LAS PETICIONES SE CONECTEN A NUESTRO DOMINIO
+//HIICMOS CON PODMAN POR CUESTIONES DE SEGURIDAD
+//CONTENEDORES OARA QUE FUNCIONE IGUAL EN NUESTRA AMQUINA 

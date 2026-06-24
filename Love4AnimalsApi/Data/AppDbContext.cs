@@ -33,7 +33,7 @@ namespace Love4AnimalsApi.Data
                 e.Property(c => c.FundraisingGoal).HasPrecision(18, 2);
                 e.Property(c => c.TotalRaised).HasPrecision(18, 2);
                 e.HasOne<User>().WithMany().HasForeignKey(c => c.UserId)
-                    .OnDelete(DeleteBehavior.Cascade);
+                    .OnDelete(DeleteBehavior.Cascade); //EN CASCADA, PARA LAS FK
             });
 
             modelBuilder.Entity<Post>(e =>
